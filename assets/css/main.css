@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  background-color: #070c18;
+  color: #e2e8f0;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #070c18; }
+::-webkit-scrollbar-thumb { background: #1c2d4a; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #2a4166; }
+
+/* ─── Selection ─────────────────────────────────────────── */
+::selection { background: rgba(34,211,238,0.2); color: #22d3ee; }
+
+/* ─── Pipeline animation ────────────────────────────────── */
+
+/* Horizontal: 80 px right (most row-1 segments and row-2 segments) */
+@keyframes flow-h80 {
+  0%   { transform: translateX(0);     opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(80px);  opacity: 0; }
+}
+
+/* Horizontal: 105 px right (PyFlink → Iceberg, wider gap before the turn) */
+@keyframes flow-h105 {
+  0%   { transform: translateX(0);     opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(105px); opacity: 0; }
+}
+
+/* Vertical: 86 px upward (CDC Debezium → Redpanda) */
+@keyframes flow-v86up {
+  0%   { transform: translateY(0);     opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateY(-86px); opacity: 0; }
+}
+
+/* Vertical: 162 px downward (Iceberg → Trino, the main pipeline turn) */
+@keyframes flow-v162down {
+  0%   { transform: translateY(0);      opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateY(162px);  opacity: 0; }
+}
+
+/* Node border pulse */
+@keyframes border-pulse-cyan {
+  0%, 100% { stroke-opacity: 0.35; }
+  50%       { stroke-opacity: 0.75; }
+}
+@keyframes border-pulse-amber {
+  0%, 100% { stroke-opacity: 0.45; }
+  50%       { stroke-opacity: 0.9; }
+}
+@keyframes border-pulse-emerald {
+  0%, 100% { stroke-opacity: 0.45; }
+  50%       { stroke-opacity: 0.9; }
+}
+@keyframes border-pulse-orange {
+  0%, 100% { stroke-opacity: 0.35; }
+  50%       { stroke-opacity: 0.7; }
+}
+
+/* Corner dot pulse */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.4; r: 2.5; }
+  50%       { opacity: 1;   r: 3.5; }
+}
+
+/* Particle classes */
+.particle-h      { animation: flow-h80      1.4s  linear infinite; }
+.particle-h105   { animation: flow-h105     1.6s  linear infinite; }
+.particle-v-up   { animation: flow-v86up    1.15s linear infinite; }
+.particle-v-down { animation: flow-v162down 2.0s  linear infinite; }
+
+/* Node SVG rect classes */
+.node-cyan    { animation: border-pulse-cyan   3s    ease-in-out infinite; }
+.node-amber   { animation: border-pulse-amber  3.5s  ease-in-out infinite; }
+.node-emerald { animation: border-pulse-emerald 3.2s ease-in-out infinite; animation-delay: 0.8s; }
+.node-orange  { animation: border-pulse-orange 4s    ease-in-out infinite; animation-delay: 1.2s; }
+.corner-dot   { animation: dot-pulse 2.5s ease-in-out infinite; }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stat number animation */
+@keyframes count-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stat-value {
+  animation: count-in 0.6s ease-out forwards;
+  opacity: 0;
+}
+.stat-value.visible { opacity: 1; }
+
+/* ─── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .particle-h, .particle-h-long, .particle-v,
+  .node-cyan, .node-amber, .node-emerald, .node-orange,
+  .corner-dot, .reveal { animation: none; transition: none; }
+  .reveal { opacity: 1; transform: none; }
+}
